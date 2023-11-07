@@ -58,8 +58,34 @@ Desea crearlo ? Si o No :").upper()
 
 # Nuevo metodo para eliminar  un alumno  
     def eliminar_alumno(self, index):
-        self.alumnos.pop(index)
-   
+        #Punto 3
+        try:
+            with open('alumnoseliminados.csv',mode='x') as arch: #Creo el archivo en modo 'x' para ver si ya está creado, si no es así,lo creo
+                writer = csv.writer(arch,delimiter=';')
+                writer.writerow(['Nombre','Apellido']) #Pongo las columnas
+        except FileExistsError: #Si el archivo existe, paso de largo
+            pass
+        with open('alumnoseliminados.csv',mode='a') as arch: 
+            cursor = csv.writer(arch,delimiter=';') #Con el archivo abierto
+            alumno_eliminado = self.alumnos[index] #Tomo el alumno eliminado y lo guardo en una variable
+            cursor.writerow([alumno_eliminado.nombre,alumno_eliminado.apellido]) #Tomo nombre y apellido del alumno_eliminado y lo guardo
+        self.alumnos.pop(index) #Además borro el alumno, tal como ya estaba antes
+#Punto 4
+def log_de_modificacion(accion,alumno):
+    try:
+        with open('log_de_modificacion.csv',mode='x',encoding='utf-8') as arch: #Creo el archivo en modo 'x' para ver si ya está creado, si no es así,lo creo
+            writer = csv.writer(arch,delimiter=';')
+            writer.writerow(['Nombre','Apellido','Opción']) #Pongo las columnas
+    except FileExistsError: #Si el archivo existe, paso de largo
+        pass
+    if accion == 'e':
+        que_se_hizo = 'Se eliminó'
+    elif accion == 'm':
+        que_se_hizo = 'Se modificó'
+    with open('log_de_modificacion.csv',mode='a',encoding='utf-8') as arch: 
+        cursor = csv.writer(arch,delimiter=';') #Con el archivo abierto
+        cursor.writerow([alumno.nombre,alumno.apellido,que_se_hizo]) #Tomo nombre y apellido del alumno_eliminado y lo guardo
+
 
     
 

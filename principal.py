@@ -82,7 +82,8 @@ class Presentismo_dia:
         guardar_presentismo (Abre el archivo presentismo.csv en modo w ,  escribe el encabezado y agrega la lista de presentismos cargados)
         cargar_presentismo  (Abre el archivo presentismo.csv en modo r y "NO muestra el listado de presentismos
                              guardados en el archivo " pero si los carga en la lista presentismos de la clase para una mejor manipulacion.
-                             en el caso de que el archivo presentismo.csv no exista lo crea y escribe el encabezado )
+                             en el caso de que el archivo presentismo.csv 1
+                             a lo crea y escribe el encabezado )
         cargar_alumnos      (Abre el archivo alummos.csv en modo r los carga en la lista alumnos, pero concatena apellido + nombre y los guarda en
                              la lista alumnos de la clase Presentismo_dia
                              en el caso de que el archivo alummos.csv no exista muestra el aviso pero no lo crea )
@@ -277,14 +278,19 @@ def modif_elim_alumno(accion):
                                           input("                    Ingrese Apellido: ").capitalize())
                         if n_alumno.apellido != "" and n_alumno.nombre != "" and alumnos.existe(n_alumno):
                             alumno_antiguo = alumnos.alumnos[index]
+                            log_de_modificacion(accion,alumno_antiguo) #Llamo a la funcion del punto 4 para dejar un log del Alumno y qué se hizo
                             alumnos.actualizar_alumno(index,n_alumno)
                             actualizar_en_presen('presentismo.csv',alumno_antiguo,n_alumno) #Llamo a la función cada vez que se modifique el alumno (la función está detallada en presentismo_para_clase.py)
                             correcto = True
+                            
 
                         else:
                             print("\n                    Error faltan datos o el Alumno ya existe\n")
                     
                     elif accion.lower() == 'e':
+                        alumno_a_eliminar = alumnos.alumnos[index] #Creo la variable para almacenar el alumno a eliminar
+                        log_de_modificacion(accion,alumno_a_eliminar) #Llamo a la funcion del punto 4 para dejar un log del Alumno y qué se hizo
+                        eliminar_en_presen('presentismo.csv',alumno_a_eliminar) #Llamo a la funcion para eliminar sobre el archivo presentismo y con la variable recien creada
                         alumnos.eliminar_alumno(index)
                         correcto = True                    
                     break

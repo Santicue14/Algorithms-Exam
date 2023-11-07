@@ -65,15 +65,35 @@ class Presentismo_dia:
 
 # Punto 1 función
 def actualizar_en_presen(archivo_presen, alumno_viejo, alumno_nuevo):
-    with open(archivo_presen, mode="r") as arch: #Abro el archivo_presen en modo lectura
-        filas_de_presentismo = list(csv.reader(arch, delimiter=';')) #Listo las filas del archivo para luego recorrerlas
-        
-    for fila in filas_de_presentismo: #Bucle que recorre todas las filas de presentismo
-        fecha, alumno, presencia = fila #Agarro cada columna de la fila y la almaceno en fecha,alumno, y si asistió o no
-        if alumno == f'{alumno_viejo.apellido} {alumno_viejo.nombre}': #Busca el alumno viejo obteniendo los datos desde principal.py
-            fila[1] = f'{alumno_nuevo.apellido} {alumno_nuevo.nombre}'#Si es el alumno le cambia los atributos por los del nuevo Alumno generado
+    try:
+        with open(archivo_presen, mode="r") as arch: #Abro el archivo_presen en modo lectura
+            filas_de_presentismo = list(csv.reader(arch, delimiter=';')) #Listo las filas del archivo para luego recorrerlas
+            
+        for fila in filas_de_presentismo: #Bucle que recorre todas las filas de presentismo
+            fecha, alumno, presencia = fila #Agarro cada columna de la fila y la almaceno en fecha,alumno, y si asistió o no
+            if alumno == f'{alumno_viejo.apellido} {alumno_viejo.nombre}': #Busca el alumno viejo obteniendo los datos desde principal.py
+                fila[1] = f'{alumno_nuevo.apellido} {alumno_nuevo.nombre}'#Si es el alumno le cambia los atributos por los del nuevo Alumno generado
 
-    with open(archivo_presen, mode='w', newline='') as arch: #Vuelvo a abrir el archivo pero en modo escritura
-        cursor = csv.writer(arch, delimiter=';')
-        cursor.writerow([fecha, alumno_nuevo,presencia]) #Modifico las filas nuevas
-        cursor.writerows(filas_de_presentismo)  #Luego de modificar las filas por el alumno nuevo continua con los otros valores
+        with open(archivo_presen, mode='w', newline='') as arch: #Vuelvo a abrir el archivo pero en modo escritura
+            cursor = csv.writer(arch, delimiter=';')
+            cursor.writerow([fecha, alumno_nuevo,presencia]) #Modifico las filas nuevas
+            cursor.writerows(filas_de_presentismo)  #Luego de modificar las filas por el alumno nuevo continua con los otros valores
+    except FileNotFoundError:
+        pass
+def eliminar_en_presen(archivo_presen,datos_alumno):
+    try: 
+        with open(archivo_presen, mode="r") as arch:  #Abro el archivo_presen en modo lectura
+            filas_de_presentismo = list(csv.reader(arch, delimiter=';')) #Listo las filas del archivo para luego recorrerlas
+        filas_para_eliminar = [] #Creo una variable donde agregaré todas las listas a borrar
+        for fila in filas_de_presentismo:  #Abro un bucle para recorrer todas las filas 
+            fecha, alumno, presencia = fila #Separo la fila en las columnas por el delimitador ;
+            if f'{datos_alumno.apellido} {datos_alumno.nombre}' == alumno: #Busca si los datos_alumno del alumno a eliminar coinciden en la tabla presentismo
+                filas_para_eliminar.append(fila)
+        #print(filas_para_eliminar)
+        for fila in filas_para_eliminar: #Recorre las filas para eliminar y las ↓
+                filas_de_presentismo.remove(fila) #elimina a las que hay que eliminar
+        with open(archivo_presen, mode='w', newline='') as arch: #Vuelvo a abrir el archivo pero en modo escritura
+            cursor = csv.writer(arch, delimiter=';')
+            cursor.writerows(filas_de_presentismo)  #Luego de modificar las filas por el alumno eliminado continua con los otros valores
+    except Exception:
+        return True
