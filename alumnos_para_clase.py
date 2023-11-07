@@ -78,13 +78,13 @@ def log_de_modificacion(accion,alumno):
             writer.writerow(['Nombre','Apellido','Opción']) #Pongo las columnas
     except FileExistsError: #Si el archivo existe, paso de largo
         pass
-    if accion == 'e':
+    if accion == 'e': #Evalúo cual es la accion que se hizo
         que_se_hizo = 'Se eliminó'
     elif accion == 'm':
         que_se_hizo = 'Se modificó'
-    with open('log_de_modificacion.csv',mode='a',encoding='utf-8') as arch: 
+    with open('log_de_modificacion.csv',mode='a',encoding='utf-8') as arch: #Encoding uft-8 para que ponga bien las tildes
         cursor = csv.writer(arch,delimiter=';') #Con el archivo abierto
-        cursor.writerow([alumno.nombre,alumno.apellido,que_se_hizo]) #Tomo nombre y apellido del alumno_eliminado y lo guardo
+        cursor.writerow([alumno.nombre,alumno.apellido,que_se_hizo]) #Tomo nombre y apellido del alumno, además de la accion y lo guardo
 
 
     
